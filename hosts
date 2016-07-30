@@ -1,0 +1,1 @@
+fedora-jenkins ansible_port=1122 ansible_host=127.0.0.1

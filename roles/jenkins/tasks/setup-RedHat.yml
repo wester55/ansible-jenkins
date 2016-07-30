@@ -1,0 +1,24 @@
+---
+- name: Ensure dependencies are installed.
+  dnf: pkg=curl state=installed
+
+- name: Ensure Jenkins repo is installed.
+  get_url:
+    url: "{{ jenkins_repo_url }}"
+    dest: /etc/yum.repos.d/jenkins.repo
+
+- name: Add Jenkins repo GPG key.
+  rpm_key:
+    state: present
+    key: "{{ jenkins_repo_key_url }}"
+
+- name: Ensure Jenkins is installed.
+  dnf: name=jenkins state=installed
+  register: jenkins_install_package
+
+- name: Ensure pid file exists and owned by user jenkins
+  file:
+    path: "{{ jenkins_pid_file }}"
+    state: touch
+    owner: jenkins
+    group: jenkins
