@@ -17,7 +17,5 @@ jenkins_init_changes:
 
 jenkins_repo_url: http://pkg.jenkins-ci.org/redhat/jenkins.repo
 jenkins_repo_key_url: http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
-jenkins_init_file: /etc/sysconfig/jenkins
-jenkins_http_port_param: JENKINS_PORT
 jenkins_pid_file: /var/run/jenkins.pid
 jenkins_init_script: /etc/init.d/jenkins

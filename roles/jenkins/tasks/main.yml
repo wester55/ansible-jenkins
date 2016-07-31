@@ -36,6 +36,3 @@
   file:
     path: /var/lib/jenkins/init.groovy.d/basic-security.groovy
     state: absent
-
-# Update Jenkins and install configured plugins.
-- include: plugins.yml
