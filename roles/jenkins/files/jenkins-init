@@ -31,6 +31,8 @@ JENKINS_PID_FILE="/var/run/jenkins.pid"
 # Read config	
 [ -f "$JENKINS_CONFIG" ] && . "$JENKINS_CONFIG"
 
+JENKINS_JAVA_OPTIONS="$JENKINS_JAVA_OPTIONS -Djenkins.install.runSetupWizard=false"
+
 # Set up environment accordingly to the configuration settings
 [ -n "$JENKINS_HOME" ] || { echo "JENKINS_HOME not configured in $JENKINS_CONFIG";
 	if [ "$1" = "stop" ]; then exit 0;

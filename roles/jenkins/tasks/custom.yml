@@ -1,0 +1,12 @@
+---
+
+- name: Check installed plugins
+  command: java -jar {{ jenkins_jar_location }} -noKeyAuth -s http://{{ ansible_host }}:{{ jenkins_http_port }} list-plugins --username {{ jenkins_admin_username }} --password {{ jenkins_admin_password }}
+  register: jenkins_plugins
+  changed_when: False
+
+#- debug: var=jenkins_plugins verbosity=1
+ 
+- name: Install Matrix Authorization plugin
+  command: java -jar {{ jenkins_jar_location }} -noKeyAuth -s http://{{ ansible_host }}:{{ jenkins_http_port }} install-plugin matrix-auth -deploy -restart --username {{ jenkins_admin_username }} --password {{ jenkins_admin_password }}
+  when: jenkins_plugins.stdout.find('\nmatrix-auth') == -1 
