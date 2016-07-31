@@ -79,7 +79,7 @@ case "$1" in
     start)
 	echo "Starting Jenkins ..."
 	command="su $JENKINS_USER -c \"nohup $JAVA_CMD $PARAMS >/dev/null 2>&1\"" 
-	eval $command
+	result=`eval $command 2>&1`
 	echo "Waiting for Jenkins to fully initialize ..." && sleep 5
 	pidof /etc/alternatives/java > $JENKINS_PID_FILE
 	running=`cat $JENKINS_PID_FILE | ps auxw | grep jenkins | grep -v grep | grep - | wc -l`
@@ -87,7 +87,7 @@ case "$1" in
             echo "Successfully started Jenkins"
             echo "Jenkins pid is "$(cat $JENKINS_PID_FILE)
         else
-            echo "Failed to start Jenkins" && exit 1
+            echo -e "Failed to start Jenkins with command:\n$command\nwith result:\n$result" && exit 1
         fi
 	echo
 	;;
@@ -117,19 +117,16 @@ case "$1" in
     	$0 restart
 	;;
     status)
-    	status jenkins
-	RETVAL=$?
-	;;
-    probe)
-	## Optional: Probe for the necessity of a reload, print out the
-	## argument to this init script which is required for a reload.
-	## Note: probe is not (yet) part of LSB (as of 1.9)
-
-	test "$JENKINS_CONFIG" -nt "$JENKINS_PID_FILE" && echo reload
+        pidof /etc/alternatives/java > $JENKINS_PID_FILE
+	running=`cat $JENKINS_PID_FILE | ps auxw | grep jenkins | grep -v grep | grep - | wc -l`
+	if [ $running = 1 ]; then
+            echo "Jenkins pid is "$(cat $JENKINS_PID_FILE)
+        else
+            echo "Jenkins is not running" && exit 1
+        fi
 	;;
     *)
-	echo "Usage: $0 {start|stop|status|restart|reload|probe}"
+	echo "Usage: $0 {start|stop|status|restart|reload}"
 	exit 1
 	;;
 esac
-exit $RETVAL

@@ -1,7 +1,7 @@
 ---
 jenkins_connection_delay: 5
 jenkins_connection_retries: 60
-jenkins_hostname: jenkins
+jenkins_hostname: 127.0.0.1
 jenkins_http_port: 8080
 jenkins_jar_location: /opt/jenkins-cli.jar
 jenkins_plugins: []
@@ -14,3 +14,10 @@ jenkins_admin_password: admin
 jenkins_init_changes:
   - {option: "JENKINS_ARGS", value: "--prefix={{ jenkins_url_prefix }}"}
   - {option: "JENKINS_JAVA_OPTIONS", value: "{{ jenkins_java_options }}"}
+
+jenkins_repo_url: http://pkg.jenkins-ci.org/redhat/jenkins.repo
+jenkins_repo_key_url: http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
+jenkins_init_file: /etc/sysconfig/jenkins
+jenkins_http_port_param: JENKINS_PORT
+jenkins_pid_file: /var/run/jenkins.pid
+jenkins_init_script: /etc/init.d/jenkins
