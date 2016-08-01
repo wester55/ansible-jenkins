@@ -10,3 +10,10 @@
 - name: Install Matrix Authorization plugin
   command: java -jar {{ jenkins_jar_location }} -noKeyAuth -s http://{{ ansible_host }}:{{ jenkins_http_port }} install-plugin matrix-auth -deploy -restart --username {{ jenkins_admin_username }} --password {{ jenkins_admin_password }}
   when: jenkins_plugins.stdout.find('\nmatrix-auth') == -1 
+
+
+- name: Populate Matrix security Groovy script in temp folder
+  template: src=matrix-authorization.groovy.j2 dest={{ tmp_folder }}/matrix-authorization.groovy
+
+- name: Set Matrix Authorization strategy
+  command: java -jar {{ jenkins_jar_location }} -noKeyAuth -s http://{{ ansible_host }}:{{ jenkins_http_port }} groovy {{ tmp_folder }}/matrix-authorization.groovy --username {{ jenkins_admin_username }} --password {{ jenkins_admin_password }}

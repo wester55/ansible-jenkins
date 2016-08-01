@@ -12,3 +12,10 @@ jenkins_repo_url: http://pkg.jenkins-ci.org/redhat/jenkins.repo
 jenkins_repo_key_url: http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
 jenkins_pid_file: /var/run/jenkins.pid
 jenkins_init_script: /etc/init.d/jenkins
+
+jenkins_users:
+  - {user: "{{ jenkins_admin_username }}", pass: "{{ jenkins_admin_password }}"}
+  - {user: "john", pass: "john"}
+  - {user: "albert", pass: "albert"}
+
+tmp_folder: /tmp/jenkins_groovy_scripts

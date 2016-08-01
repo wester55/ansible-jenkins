@@ -26,3 +26,41 @@
 
 - name: Set shell to /bin/bash for user jenkins
   user: name=jenkins shell=/bin/bash
+
+- name: Copy our Jenkins init file.
+  copy:
+    src: jenkins-init
+    dest: "{{ jenkins_init_script }}"
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Restart Jenkins
+  command: "{{ jenkins_init_script }} restart" 
+
+- name: Wait for Jenkins to start up before proceeding.
+  uri:
+    url: "http://{{ jenkins_hostname }}:{{ jenkins_http_port }}/cli/"
+    return_content: yes
+    method: GET
+    register: result
+    until: result.content.find("Page generated") != -1
+    retries: "{{ jenkins_connection_retries }}"
+    delay: "{{ jenkins_connection_delay }}"
+    changed_when: false
+
+- name: Get the jenkins-cli jarfile from the Jenkins server.
+  get_url:
+    url: "http://{{ jenkins_hostname }}:{{ jenkins_http_port }}/jnlpJars/jenkins-cli.jar"
+    dest: "{{ jenkins_jar_location }}"
+  register: jarfile_get
+  until: "'OK' in jarfile_get.msg or 'file already exists' in jarfile_get.msg"
+  retries: 5
+  delay: 10
+
+- name: Create temp folder
+  file: state=directory path={{ tmp_folder }}
+
+#- debug: var=result verbosity=1
+
+#- fail: msg="debug failure"

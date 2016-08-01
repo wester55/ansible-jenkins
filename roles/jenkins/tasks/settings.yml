@@ -1,29 +1,11 @@
 ---
 
-- name: Copy our Jenkins init file.
-  copy:
-    src: jenkins-init
-    dest: "{{ jenkins_init_script }}"
-    owner: root
-    group: root
-    mode: 0755
+- name: Populate Basic security Groovy script in temp folder
+  template: src=basic-security.groovy.j2 dest={{ tmp_folder }}/basic-security.groovy
 
-- name: Create custom init scripts directory.
-  file:
-    path: /var/lib/jenkins/init.groovy.d
-    state: directory
-    owner: jenkins
-    group: jenkins
-    mode: 0775
+- name: Configure Jenkins default admin user
+  command: java -jar {{ jenkins_jar_location }} -noKeyAuth -s http://{{ ansible_host }}:{{ jenkins_http_port }} groovy {{ tmp_folder }}/basic-security.groovy
 
-- name: Configure Jenkins default users.
-  template:
-    src: basic-security.groovy
-    dest: /var/lib/jenkins/init.groovy.d/basic-security.groovy
-  register: jenkins_users_config
-  when: jenkins_install_package.changed
+#- debug: var=result verbosity=1
 
-- name: Immediately restart Jenkins on user changes.
-  command: "/bin/true"
-  when: jenkins_users_config.changed
-  notify: restart jenkins
+#- fail: msg="debug failure"
