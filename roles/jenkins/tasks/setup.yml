@@ -34,9 +34,11 @@
     owner: root
     group: root
     mode: 0755
+  register: init_file
 
 - name: Restart Jenkins
   command: "{{ jenkins_init_script }} restart" 
+  when: init_file.changed
 
 - name: Wait for Jenkins to start up before proceeding.
   uri:
@@ -48,6 +50,7 @@
     retries: "{{ jenkins_connection_retries }}"
     delay: "{{ jenkins_connection_delay }}"
     changed_when: false
+    status_code: 200,403,503
 
 - name: Get the jenkins-cli jarfile from the Jenkins server.
   get_url:
