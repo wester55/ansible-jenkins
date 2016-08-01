@@ -8,22 +8,22 @@
     group: root
     mode: 0755
 
-- name: Create custom init scripts directory.
-  file:
-    path: /var/lib/jenkins/init.groovy.d
-    state: directory
-    owner: jenkins
-    group: jenkins
-    mode: 0775
-
-- name: Configure Jenkins default users.
-  template:
-    src: basic-security.groovy
-    dest: /var/lib/jenkins/init.groovy.d/basic-security.groovy
-  register: jenkins_users_config
-  when: jenkins_install_package.changed
-
-- name: Immediately restart Jenkins on user changes.
-  command: "/bin/true"
-  when: jenkins_users_config.changed
-  notify: restart jenkins
+#- name: Create custom init scripts directory.
+#  file:
+#    path: /var/lib/jenkins/init.groovy.d
+#    state: directory
+#    owner: jenkins
+#    group: jenkins
+#    mode: 0775
+#
+#- name: Configure Jenkins default users.
+#  template:
+#    src: basic-security.groovy
+#    dest: /var/lib/jenkins/init.groovy.d/basic-security.groovy
+#  register: jenkins_users_config
+#  when: jenkins_install_package.changed
+#
+#- name: Immediately restart Jenkins on user changes.
+#  command: "/bin/true"
+#  when: jenkins_users_config.changed
+#  notify: restart jenkins
